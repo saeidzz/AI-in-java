@@ -1,0 +1,186 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<title>mapColoringHill.java</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<style type="text/css">
+<!--
+body {color: #a9b7c6; background-color: #2b2b2b; font-family: Monospaced}
+pre {color: #a9b7c6; background-color: #2b2b2b; font-family: Monospaced}
+table {color: #888888; background-color: #313335; font-family: Monospaced}
+.ST5 {color: #ffc66d; font-family: Monospaced; font-style: italic}
+.number {color: #6897bb}
+.ST2 {color: #ffc66d}
+.whitespace {color: #505050}
+.keyword-directive {color: #cc7832}
+.character {color: #6a8759}
+.ST4 {font-family: Monospaced; font-style: italic}
+.ST3 {color: #9876aa; font-family: Monospaced; font-style: italic}
+.comment {color: #808080}
+.ST1 {color: #9876aa}
+.ST0 {color: #808080; font-family: Monospaced; font-weight: bold}
+-->
+</style>
+</head>
+<body>
+<table width="100%"><tr><td align="center">D:\aiProject\src\aiproject\CSP\mapColoringHill.java</td></tr></table>
+<pre>
+  1 <span class="comment">/*</span>
+  2 <span class="comment"> * To change this license header, choose License Headers in Project Properties.</span>
+  3 <span class="comment"> * To change this template file, choose Tools | Templates</span>
+  4 <span class="comment"> * and open the template in the editor.</span>
+  5 <span class="comment"> */</span>
+  6 
+  7 <span class="keyword-directive">package</span> aiproject.CSP;
+  8 
+  9 
+ 10 <span class="comment">import</span> <span class="comment">com</span><span class="comment">.</span><span class="comment">sun</span><span class="comment">.</span><span class="comment">xml</span><span class="comment">.</span><span class="comment">internal</span><span class="comment">.</span><span class="comment">stream</span><span class="comment">.</span><span class="comment">Entity</span><span class="comment">;</span>
+ 11 <span class="keyword-directive">import</span> java.util.Random;
+ 12 <span class="keyword-directive">import</span> java.util.Scanner;
+ 13 
+ 14 
+ 15 
+ 16 <span class="comment">/**</span>
+ 17 <span class="comment"> *</span>
+ 18 <span class="comment"> * </span><span class="ST0">@author</span> <span class="comment">saeid</span>
+ 19  <span class="comment">*/</span>
+ 20 <span class="keyword-directive">public</span> <span class="keyword-directive">class</span> mapColoringHill {
+ 21     <span class="keyword-directive">int</span>[] <span class="ST1">neighbersHu</span>=<span class="keyword-directive">new</span> <span class="keyword-directive">int</span>[<span class="number">3</span>];
+ 22     <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> <span class="ST2">mapColoring</span>(<span class="keyword-directive">int</span>[][] m,<span class="keyword-directive">int</span> numOfColor){
+ 23         <span class="comment">//an array for getting vertex titles</span>
+ 24         <span class="keyword-directive">char</span>[] vertexes=<span class="keyword-directive">new</span> <span class="keyword-directive">char</span>[m.<span class="ST1">length</span>];
+ 25         <span class="comment">///initial titles</span>
+ 26         <span class="keyword-directive">char</span>[] ch=<span class="keyword-directive">new</span> <span class="keyword-directive">char</span>[]{<span class="character">&#39;</span><span class="character">A</span><span class="character">&#39;</span>,<span class="character">&#39;</span><span class="character">B</span><span class="character">&#39;</span>,<span class="character">&#39;</span><span class="character">C</span><span class="character">&#39;</span>,<span class="character">&#39;</span><span class="character">D</span><span class="character">&#39;</span>,<span class="character">&#39;</span><span class="character">E</span><span class="character">&#39;</span>,<span class="character">&#39;</span><span class="character">F</span><span class="character">&#39;</span>,<span class="character">&#39;</span><span class="character">G</span><span class="character">&#39;</span>,<span class="character">&#39;</span><span class="character">H</span><span class="character">&#39;</span>,<span class="character">&#39;</span><span class="character">I</span><span class="character">&#39;</span>,<span class="character">&#39;</span><span class="character">J</span><span class="character">&#39;</span>,<span class="character">&#39;</span><span class="character">K</span><span class="character">&#39;</span>,<span class="character">&#39;</span><span class="character">L</span><span class="character">&#39;</span>,<span class="character">&#39;</span><span class="character">M</span><span class="character">&#39;</span>,<span class="character">&#39;</span><span class="character">N</span><span class="character">&#39;</span>,<span class="character">&#39;</span><span class="character">O</span><span class="character">&#39;</span>,<span class="character">&#39;</span><span class="character">P</span><span class="character">&#39;</span>,<span class="character">&#39;</span><span class="character">Q</span><span class="character">&#39;</span>,<span class="character">&#39;</span><span class="character">R</span><span class="character">&#39;</span>,<span class="character">&#39;</span><span class="character">S</span><span class="character">&#39;</span>,<span class="character">&#39;</span><span class="character">T</span><span class="character">&#39;</span>,<span class="character">&#39;</span><span class="character">U</span><span class="character">&#39;</span>,<span class="character">&#39;</span><span class="character">V</span><span class="character">&#39;</span>,<span class="character">&#39;</span><span class="character">W</span><span class="character">&#39;</span>,<span class="character">&#39;</span><span class="character">X</span><span class="character">&#39;</span>,<span class="character">&#39;</span><span class="character">Y</span><span class="character">&#39;</span>,<span class="character">&#39;</span><span class="character">Z</span><span class="character">&#39;</span>};
+ 27         <span class="comment">//giving vertexes title</span>
+ 28         <span class="keyword-directive">for</span> (<span class="keyword-directive">int</span> i = <span class="number">0</span>; i &lt; m.<span class="ST1">length</span>; i++) {
+ 29             vertexes[i]=ch[i];
+ 30         }
+ 31         <span class="comment">//checking graph coloring possibality </span>
+ 32         <span class="comment">///if sum of one&#39;s of m matrix divide number of vertexes mines one equal or less than number of color there is solution else there is no one</span>
+ 33         <span class="keyword-directive">if</span>( possibality(m,numOfColor)){
+ 34           <span class="keyword-directive">int</span>[] vAllocatedColor0=randomColoring(numOfColor,vertexes);
+ 35          <span class="keyword-directive">int</span> h0= huresticCalculator(vAllocatedColor0,m);
+ 36          
+ 37          statePrinter(vAllocatedColor0,vertexes) ;
+ 38          System.<span class="ST3">out</span>.println(<span class="character">&quot;</span><span class="character">first state hurestic is:</span><span class="character">&quot;</span>+h0);
+ 39          <span class="keyword-directive">while</span>(<span class="keyword-directive">true</span>){
+ 40           <span class="keyword-directive">int</span>[] vAllocatedColor1=randomColoring(numOfColor,vertexes);
+ 41           <span class="keyword-directive">int</span>[] vAllocatedColor2=randomColoring(numOfColor,vertexes);
+ 42           <span class="keyword-directive">int</span>[] vAllocatedColor3=randomColoring(numOfColor,vertexes);
+ 43           <span class="keyword-directive">int</span> h1= huresticCalculator(vAllocatedColor1,m);
+ 44           <span class="keyword-directive">int</span> h2= huresticCalculator(vAllocatedColor2,m);
+ 45           <span class="keyword-directive">int</span> h3= huresticCalculator(vAllocatedColor3,m); 
+ 46           <span class="keyword-directive">if</span>(h0&gt;h1){
+ 47             statePrinter(vAllocatedColor0,vertexes) ;
+ 48               System.<span class="ST3">out</span>.println(<span class="character">&quot;</span><span class="character">this state hurestic:</span><span class="character">&quot;</span>+h0);
+ 49               System.<span class="ST3">out</span>.println(<span class="character">&quot;</span><span class="character">the next state hurestic:</span><span class="character">&quot;</span>+h1);
+ 50               <span class="keyword-directive">break</span>;
+ 51           }<span class="keyword-directive">else</span>{
+ 52              <span class="keyword-directive">if</span>(h1&gt;h2){
+ 53                  statePrinter(vAllocatedColor1,vertexes) ;
+ 54                  System.<span class="ST3">out</span>.println(<span class="character">&quot;</span><span class="character">this state hurestic:</span><span class="character">&quot;</span>+h1);
+ 55                  System.<span class="ST3">out</span>.println(<span class="character">&quot;</span><span class="character">the next state hurestic:</span><span class="character">&quot;</span>+h2);
+ 56 
+ 57               <span class="keyword-directive">break</span>;
+ 58              }<span class="keyword-directive">else</span>{
+ 59                  <span class="keyword-directive">if</span>(h2&gt;h3){
+ 60                     statePrinter(vAllocatedColor2,vertexes) ;
+ 61                     System.<span class="ST3">out</span>.println(<span class="character">&quot;</span><span class="character">this state hurestic:</span><span class="character">&quot;</span>+h2);
+ 62                     System.<span class="ST3">out</span>.println(<span class="character">&quot;</span><span class="character">the next state hurestic:</span><span class="character">&quot;</span>+h3);
+ 63               <span class="keyword-directive">break</span>;
+ 64 
+ 65                  }
+ 66                  <span class="keyword-directive">else</span>{
+ 67                      vAllocatedColor0=vAllocatedColor3;
+ 68                      h0=h3;
+ 69                      <span class="keyword-directive">continue</span>;
+ 70                  }
+ 71              }
+ 72               
+ 73           }
+ 74          }
+ 75        }<span class="keyword-directive">else</span>{
+ 76            System.<span class="ST3">out</span>.println(<span class="character">&quot;</span><span class="character">there is no solution !!</span><span class="character">&quot;</span>);
+ 77        }
+ 78     }
+ 79 
+ 80     <span class="keyword-directive">private</span> <span class="keyword-directive">int</span>[] <span class="ST2">randomColoring</span>(<span class="keyword-directive">int</span> numOfColor, <span class="keyword-directive">char</span>[] vertexes) {
+ 81         <span class="keyword-directive">int</span>[] vAllocatedColor=<span class="keyword-directive">new</span> <span class="keyword-directive">int</span>[vertexes.<span class="ST1">length</span>];
+ 82         Random r=<span class="keyword-directive">new</span> Random();
+ 83         <span class="keyword-directive">for</span>(<span class="keyword-directive">int</span> i=<span class="number">0</span>;i&lt;vertexes.<span class="ST1">length</span>;i++){
+ 84            vAllocatedColor[i]=Math.<span class="ST4">abs</span>(r.nextInt()%numOfColor);
+ 85         }
+ 86         
+ 87         <span class="keyword-directive">return</span> vAllocatedColor;
+ 88     }
+ 89     
+ 90     
+ 91 
+ 92     <span class="keyword-directive">private</span> <span class="keyword-directive">boolean</span> <span class="ST2">possibality</span>(<span class="keyword-directive">int</span>[][] m, <span class="keyword-directive">int</span> numOfColor) {
+ 93         <span class="keyword-directive">int</span> sum=<span class="number">0</span>;
+ 94         <span class="keyword-directive">boolean</span> ret=<span class="keyword-directive">false</span>;
+ 95         <span class="keyword-directive">for</span> (<span class="keyword-directive">int</span> i = <span class="number">0</span>; i &lt; m.<span class="ST1">length</span>; i++) {
+ 96             <span class="keyword-directive">for</span> (<span class="keyword-directive">int</span> j = <span class="number">0</span>; j &lt; m.<span class="ST1">length</span>; j++) {
+ 97                 <span class="keyword-directive">if</span>(m[i][j]==<span class="number">1</span>){
+ 98                     sum+=<span class="number">1</span>;
+ 99                 }
+100             }
+101         }
+102         <span class="keyword-directive">if</span>(sum/(m.<span class="ST1">length</span>-<span class="number">1</span>)&lt;=numOfColor){
+103           ret=<span class="keyword-directive">true</span>;  
+104         }<span class="keyword-directive">else</span>{
+105             ret=<span class="keyword-directive">false</span>;
+106         }
+107         <span class="keyword-directive">return</span> ret;
+108     }
+109     
+110     <span class="keyword-directive">private</span> <span class="keyword-directive">int</span> <span class="ST2">huresticCalculator</span>(<span class="keyword-directive">int</span>[] vAllocatedColor, <span class="keyword-directive">int</span>[][] m) {
+111         <span class="keyword-directive">int</span> h=<span class="number">0</span>;
+112         <span class="keyword-directive">for</span> (<span class="keyword-directive">int</span> i = <span class="number">0</span>; i &lt; m.<span class="ST1">length</span>; i++) {
+113             <span class="keyword-directive">for</span> (<span class="keyword-directive">int</span> j = <span class="number">0</span>; j &lt; m.<span class="ST1">length</span>; j++) {
+114                 <span class="keyword-directive">if</span>(m[i][j]==<span class="number">1</span>){
+115                     <span class="keyword-directive">if</span>(vAllocatedColor[i]==vAllocatedColor[j]){
+116                        h--; 
+117                     }<span class="keyword-directive">else</span>{
+118                         h++;
+119                     }
+120                 }
+121             }
+122         }
+123         <span class="keyword-directive">return</span> h;
+124     }
+125     
+126    
+127 
+128 
+129     <span class="keyword-directive">private</span> <span class="keyword-directive">void</span> <span class="ST2">statePrinter</span>(<span class="keyword-directive">int</span>[] vAllocatedColor,<span class="keyword-directive">char</span>[] vertexes) {
+130         <span class="keyword-directive">for</span> (<span class="keyword-directive">int</span> i = <span class="number">0</span>; i &lt; vAllocatedColor.<span class="ST1">length</span>; i++) {
+131         System.<span class="ST3">out</span>.println(vertexes[i]+<span class="character">&quot;</span><span class="character">:</span><span class="character">&quot;</span>+vAllocatedColor[i]);
+132 
+133         }
+134     }
+135 
+136  <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">void</span> <span class="ST5">main</span>(String[] args) {
+137         mapColoringHill m=<span class="keyword-directive">new</span> mapColoringHill();
+138         System.<span class="ST3">out</span>.println(<span class="character">&quot;</span><span class="character">please enter number of vertexes :</span><span class="character">&quot;</span>);
+139         Scanner d=<span class="keyword-directive">new</span> Scanner(System.<span class="ST3">in</span>);
+140         
+141         <span class="keyword-directive">int</span> vert=d.nextInt();
+142         System.<span class="ST3">out</span>.println(<span class="character">&quot;</span><span class="character">please enter number of colors</span><span class="character">&quot;</span>);
+143         <span class="keyword-directive">int</span> noc=d.nextInt();
+144         <span class="keyword-directive">int</span>[][] vb=<span class="keyword-directive">new</span> <span class="keyword-directive">int</span>[vert][vert];
+145         System.<span class="ST3">out</span>.println(<span class="character">&quot;</span><span class="character">please enter neighberhood graph 1 for neighbers and 0 for others</span><span class="character">&quot;</span>);
+146         <span class="keyword-directive">for</span> (<span class="keyword-directive">int</span> i = <span class="number">0</span>; i &lt; vert; i++) {
+147             <span class="keyword-directive">for</span> (<span class="keyword-directive">int</span> j = <span class="number">0</span>; j &lt; vert; j++) {
+148                 vb[i][j]=d.nextInt();
+149             }
+150         }
+151         m.mapColoring(vb, noc);
+152     }
+153     
+154 
+155 }
+156 
+157 
+</pre></body>
+</html>

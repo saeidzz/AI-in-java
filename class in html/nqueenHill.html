@@ -1,0 +1,250 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<title>nqueenHill.java</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<style type="text/css">
+<!--
+body {color: #a9b7c6; background-color: #2b2b2b; font-family: Monospaced}
+pre {color: #a9b7c6; background-color: #2b2b2b; font-family: Monospaced}
+table {color: #888888; background-color: #313335; font-family: Monospaced}
+.ST5 {color: #ffc66d; font-family: Monospaced; font-style: italic}
+.number {color: #6897bb}
+.ST2 {color: #ffc66d}
+.whitespace {color: #505050}
+.keyword-directive {color: #cc7832}
+.character {color: #6a8759}
+.ST4 {font-family: Monospaced; font-style: italic}
+.ST3 {color: #9876aa; font-family: Monospaced; font-style: italic}
+.comment {color: #808080}
+.ST1 {color: #9876aa}
+.ST0 {color: #808080; font-family: Monospaced; font-weight: bold}
+-->
+</style>
+</head>
+<body>
+<table width="100%"><tr><td align="center">D:\aiProject\src\aiproject\CSP\nqueenHill.java</td></tr></table>
+<pre>
+  1 <span class="comment">/*</span>
+  2 <span class="comment"> * To change this license header, choose License Headers in Project Properties.</span>
+  3 <span class="comment"> * To change this template file, choose Tools | Templates</span>
+  4 <span class="comment"> * and open the template in the editor.</span>
+  5 <span class="comment"> */</span>
+  6 
+  7 <span class="keyword-directive">package</span> aiproject.CSP;
+  8 
+  9 
+ 10 <span class="keyword-directive">import</span> java.util.Random;
+ 11 <span class="keyword-directive">import</span> java.util.Scanner;
+ 12 <span class="keyword-directive">import</span> <span class="keyword-directive">static</span> java.lang.Math.abs;
+ 13 
+ 14 
+ 15 
+ 16 <span class="comment">/**</span>
+ 17 <span class="comment"> *</span>
+ 18 <span class="comment"> * </span><span class="ST0">@author</span> <span class="comment">saeid</span>
+ 19  <span class="comment">*/</span>
+ 20 <span class="keyword-directive">public</span> <span class="keyword-directive">class</span> nqueenHill {
+ 21     <span class="keyword-directive">private</span> <span class="keyword-directive">int</span>[]  <span class="ST1">nqHurestics</span>=<span class="keyword-directive">new</span> <span class="keyword-directive">int</span>[<span class="number">3</span>]; 
+ 22     
+ 23 
+ 24     <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> <span class="ST2">nqueen</span>(<span class="keyword-directive">int</span> numberOfQueen){
+ 25        Random r=<span class="keyword-directive">new</span> Random();
+ 26        <span class="comment">/////neiber states/////</span>
+ 27         <span class="keyword-directive">int</span>[][] rt=<span class="keyword-directive">new</span> <span class="keyword-directive">int</span>[numberOfQueen][numberOfQueen];
+ 28         <span class="keyword-directive">int</span>[][] rt1=<span class="keyword-directive">new</span> <span class="keyword-directive">int</span>[numberOfQueen][numberOfQueen];
+ 29         <span class="keyword-directive">int</span>[][] rt2=<span class="keyword-directive">new</span> <span class="keyword-directive">int</span>[numberOfQueen][numberOfQueen];
+ 30         <span class="keyword-directive">int</span>[][] rt3=<span class="keyword-directive">new</span> <span class="keyword-directive">int</span>[numberOfQueen][numberOfQueen];
+ 31         makeItZero(rt,numberOfQueen);
+ 32         makeItZero(rt1,numberOfQueen);
+ 33         makeItZero(rt2,numberOfQueen);
+ 34         makeItZero(rt3,numberOfQueen);
+ 35         <span class="comment">//first state that is random </span>
+ 36         rt=randomStateIntroducer( numberOfQueen, r, rt);
+ 37         <span class="keyword-directive">int</span> firstStateHurestic=hillClimpNqueenHuresticCalculater(rt);
+ 38        
+ 39         <span class="comment">//printing random first state</span>
+ 40         statePrinter(rt);
+ 41         System.<span class="ST3">out</span>.println(<span class="character">&quot;</span><span class="character">first state hurestic is:</span><span class="character">&quot;</span>+firstStateHurestic);
+ 42         <span class="comment">//////////cheking neighbers and implementing hill climping///////////</span>
+ 43         <span class="keyword-directive">while</span>(<span class="keyword-directive">true</span>){
+ 44         rt1=randomStateIntroducer(numberOfQueen, r, rt);
+ 45         <span class="ST1">nqHurestics</span>[<span class="number">0</span>]= hillClimpNqueenHuresticCalculater(rt);
+ 46         <span class="keyword-directive">if</span>(<span class="ST1">nqHurestics</span>[<span class="number">0</span>]&gt;firstStateHurestic){
+ 47             
+ 48         rt2=randomStateIntroducer( numberOfQueen, r, rt1);
+ 49         <span class="ST1">nqHurestics</span>[<span class="number">1</span>]= hillClimpNqueenHuresticCalculater(rt1);
+ 50         <span class="keyword-directive">if</span>(<span class="ST1">nqHurestics</span>[<span class="number">1</span>]&gt;<span class="ST1">nqHurestics</span>[<span class="number">0</span>]){
+ 51         rt3=randomStateIntroducer(numberOfQueen, r, rt2);
+ 52         <span class="ST1">nqHurestics</span>[<span class="number">2</span>]= hillClimpNqueenHuresticCalculater(rt3);
+ 53         <span class="keyword-directive">if</span>(<span class="ST1">nqHurestics</span>[<span class="number">2</span>]&gt;<span class="ST1">nqHurestics</span>[<span class="number">1</span>]){
+ 54           <span class="keyword-directive">continue</span>;
+ 55         }<span class="keyword-directive">else</span>{
+ 56              System.<span class="ST3">out</span>.println(<span class="character">&quot;</span><span class="character">//////the best state ////////</span><span class="character">&quot;</span>);
+ 57             statePrinter(rt2);
+ 58             System.<span class="ST3">out</span>.println(<span class="character">&quot;</span><span class="character">hurestic is:</span><span class="character">&quot;</span>+<span class="ST1">nqHurestics</span>[<span class="number">1</span>]);
+ 59             System.<span class="ST3">out</span>.println(<span class="character">&quot;</span><span class="character">next Stete hurestic:</span><span class="character">&quot;</span>+<span class="ST1">nqHurestics</span>[<span class="number">2</span>]);
+ 60             <span class="keyword-directive">break</span>;
+ 61         }
+ 62         }<span class="keyword-directive">else</span>{
+ 63             System.<span class="ST3">out</span>.println(<span class="character">&quot;</span><span class="character">//////the best state ////////</span><span class="character">&quot;</span>);
+ 64             statePrinter(rt1);
+ 65             System.<span class="ST3">out</span>.println(<span class="character">&quot;</span><span class="character">hurestic is:</span><span class="character">&quot;</span>+<span class="ST1">nqHurestics</span>[<span class="number">0</span>]);
+ 66             System.<span class="ST3">out</span>.println(<span class="character">&quot;</span><span class="character">next Stete hurestic:</span><span class="character">&quot;</span>+<span class="ST1">nqHurestics</span>[<span class="number">1</span>]);
+ 67 
+ 68             <span class="keyword-directive">break</span>;
+ 69         }
+ 70         }<span class="keyword-directive">else</span>{
+ 71             
+ 72             System.<span class="ST3">out</span>.println(<span class="character">&quot;</span><span class="character">//////the best state ////////</span><span class="character">&quot;</span>);
+ 73             statePrinter(rt);
+ 74             System.<span class="ST3">out</span>.println(<span class="character">&quot;</span><span class="character">hurestic is:</span><span class="character">&quot;</span>+firstStateHurestic);
+ 75             System.<span class="ST3">out</span>.println(<span class="character">&quot;</span><span class="character">next Stete hurestic:</span><span class="character">&quot;</span>+<span class="ST1">nqHurestics</span>[<span class="number">0</span>]);
+ 76 
+ 77             <span class="keyword-directive">break</span>;
+ 78         }
+ 79         }
+ 80         }
+ 81 
+ 82 
+ 83     <span class="keyword-directive">private</span> <span class="keyword-directive">void</span> <span class="ST2">makeItZero</span>(<span class="keyword-directive">int</span>[][] rt,<span class="keyword-directive">int</span> numberOfQueen) {
+ 84         <span class="keyword-directive">for</span> (<span class="keyword-directive">int</span> i = <span class="number">0</span>; i &lt; numberOfQueen; i++) {
+ 85             <span class="keyword-directive">for</span> (<span class="keyword-directive">int</span> j = <span class="number">0</span>; j &lt; numberOfQueen; j++) {
+ 86                 rt[i][j]=<span class="number">0</span>;
+ 87             }
+ 88         }
+ 89         
+ 90     }
+ 91 
+ 92 
+ 93     <span class="keyword-directive">private</span> <span class="keyword-directive">int</span>[][] <span class="ST2">randomStateIntroducer</span>( <span class="keyword-directive">int</span> numberOfQueen, Random r, <span class="keyword-directive">int</span>[][] rt) {
+ 94         makeItZero(rt, numberOfQueen);
+ 95         <span class="keyword-directive">int</span> n=<span class="number">0</span>;
+ 96         <span class="keyword-directive">while</span>(n&lt;numberOfQueen){
+ 97             <span class="keyword-directive">int</span> x=<span class="ST4">abs</span>(r.nextInt()%numberOfQueen);
+ 98             <span class="keyword-directive">int</span> y=<span class="ST4">abs</span>(r.nextInt()%numberOfQueen);
+ 99             
+100             <span class="keyword-directive">if</span>(rt[x][y]==<span class="number">0</span>){
+101                 rt[x][y]=<span class="number">1</span>;
+102                 n++;
+103             }
+104         }
+105         <span class="keyword-directive">return</span> rt;
+106     }
+107 
+108     <span class="comment">/////////a method for printing matrixes</span>
+109     <span class="keyword-directive">private</span> <span class="keyword-directive">void</span> <span class="ST2">statePrinter</span>(<span class="keyword-directive">int</span>[][] rt) {
+110         <span class="keyword-directive">for</span> (<span class="keyword-directive">int</span>[] bs : rt) {
+111             <span class="keyword-directive">for</span> (<span class="keyword-directive">int</span> b : bs) {
+112                 System.<span class="ST3">out</span>.print(b+<span class="character">&quot;</span><span class="keyword-directive">\t</span><span class="character">&quot;</span>);
+113             }
+114             System.<span class="ST3">out</span>.println(<span class="character">&quot;&quot;</span>);
+115         }
+116     }
+117        
+118 
+119    
+120 
+121    <span class="comment">//////a method for calculating hurestics //////////////</span>
+122     <span class="keyword-directive">private</span> <span class="keyword-directive">int</span> <span class="ST2">hillClimpNqueenHuresticCalculater</span>(<span class="keyword-directive">int</span>[][] rt) {
+123         <span class="keyword-directive">int</span> h=<span class="number">0</span>;
+124          <span class="comment">//////checking index Out out of bound//////</span>
+125         <span class="keyword-directive">int</span> p1=<span class="number">0</span>;
+126         <span class="keyword-directive">int</span> m1=<span class="number">0</span>;
+127         <span class="keyword-directive">int</span> p2=<span class="number">0</span>;
+128         <span class="keyword-directive">int</span> m2=<span class="number">0</span>;
+129         <span class="comment">///////hurestic calculate</span>
+130         <span class="keyword-directive">for</span>(<span class="keyword-directive">int</span> i=<span class="number">0</span>;i&lt;rt.<span class="ST1">length</span>;i++){
+131             <span class="keyword-directive">for</span> (<span class="keyword-directive">int</span> j = <span class="number">0</span>; j &lt; rt.<span class="ST1">length</span>; j++) {
+132                 <span class="comment">////////////////////</span>
+133                 <span class="keyword-directive">if</span>((i+<span class="number">1</span>)&gt;=rt.<span class="ST1">length</span>){
+134                     p1=<span class="number">1</span>;
+135                 }
+136                 <span class="keyword-directive">if</span>((i-<span class="number">1</span>)&lt;<span class="number">0</span>){
+137                     m1=<span class="number">1</span>;
+138                 }
+139                 <span class="keyword-directive">if</span>((j+<span class="number">1</span>)&gt;=rt.<span class="ST1">length</span>){
+140                     p2=<span class="number">1</span>;
+141                 }
+142                 <span class="keyword-directive">if</span>((i-<span class="number">1</span>)&lt;<span class="number">0</span>){
+143                     m2=<span class="number">1</span>;
+144                 }
+145                 <span class="comment">////////////////////</span>
+146                 <span class="keyword-directive">if</span>(rt[i][j]==<span class="number">1</span>){
+147                 <span class="keyword-directive">if</span>(p2==<span class="number">0</span>){
+148                 <span class="keyword-directive">if</span>(rt[i][j+<span class="number">1</span>]==<span class="number">1</span>){
+149                   h--;  
+150                 }<span class="keyword-directive">else</span>{
+151                     h++;
+152                 }
+153                 }
+154                 <span class="keyword-directive">if</span>(m1==<span class="number">0</span>&amp;&amp;m2==<span class="number">0</span>){
+155                 <span class="keyword-directive">if</span>(rt[i-<span class="number">1</span>][j-<span class="number">1</span>]==<span class="number">1</span>){
+156                  h--;  
+157                 }<span class="keyword-directive">else</span>{
+158                     h++;
+159                 }
+160                 }
+161                 <span class="keyword-directive">if</span>(m1==<span class="number">0</span>){
+162                 <span class="keyword-directive">if</span>(rt[i-<span class="number">1</span>][j]==<span class="number">1</span>){
+163                  h--;  
+164                 }<span class="keyword-directive">else</span>{
+165                     h++;
+166                 }
+167                 }
+168                 <span class="keyword-directive">if</span>(m1==<span class="number">0</span>&amp;&amp;p2==<span class="number">0</span>){
+169                 <span class="keyword-directive">if</span>(rt[i-<span class="number">1</span>][j+<span class="number">1</span>]==<span class="number">1</span>){
+170                   h--;  
+171                 }<span class="keyword-directive">else</span>{
+172                     h++;
+173                 }
+174                 }
+175                 <span class="keyword-directive">if</span>(m2==<span class="number">0</span>){
+176                 <span class="keyword-directive">if</span>(rt[i][j-<span class="number">1</span>]==<span class="number">1</span>){
+177                   h--;  
+178                 }<span class="keyword-directive">else</span>{
+179                     h++;
+180                 }
+181                 }
+182                 <span class="keyword-directive">if</span>(p2==<span class="number">0</span>){
+183                 <span class="keyword-directive">if</span>(rt[i][j+<span class="number">1</span>]==<span class="number">1</span>){
+184                   h--;  
+185                 }<span class="keyword-directive">else</span>{
+186                     h++;
+187                 }
+188                 }
+189                 <span class="keyword-directive">if</span>(p1==<span class="number">0</span>&amp;&amp;m2==<span class="number">0</span>){
+190                 <span class="keyword-directive">if</span>(rt[i+<span class="number">1</span>][j-<span class="number">1</span>]==<span class="number">1</span>){
+191                   h--;  
+192                 }<span class="keyword-directive">else</span>{
+193                     h++;
+194                 }
+195                 }
+196                 <span class="keyword-directive">if</span>(p1==<span class="number">0</span>){
+197                 <span class="keyword-directive">if</span>(rt[i+<span class="number">1</span>][j] == <span class="number">1</span>){
+198                   h--;  
+199                 }<span class="keyword-directive">else</span>{
+200                     h++;
+201                 }
+202                 }
+203             }
+204         }
+205                
+206             
+207         }
+208    <span class="keyword-directive">return</span> h;
+209 
+210     }
+211     <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">void</span> <span class="ST5">main</span>(String[] args) {
+212         nqueenHill h=<span class="keyword-directive">new</span> nqueenHill();
+213        Scanner s=<span class="keyword-directive">new</span> Scanner(System.<span class="ST3">in</span>);
+214        System.<span class="ST3">out</span>.println(<span class="character">&quot;</span><span class="character">please enter number of queens !</span><span class="character">&quot;</span>);
+215        h.nqueen(s.nextInt());
+216     }
+217    
+218 }
+219 
+220 
+221 
+</pre></body>
+</html>

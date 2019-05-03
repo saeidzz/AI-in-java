@@ -1,0 +1,186 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<title>UserLogin.java</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<style type="text/css">
+<!--
+body {color: #a9b7c6; background-color: #2b2b2b; font-family: Monospaced}
+pre {color: #a9b7c6; background-color: #2b2b2b; font-family: Monospaced}
+table {color: #888888; background-color: #313335; font-family: Monospaced}
+.ST5 {color: #ffc66d; font-family: Monospaced; font-style: italic}
+.number {color: #6897bb}
+.ST2 {color: #ffc66d}
+.character {color: #6a8759}
+.ST4 {color: #9876aa; font-family: Monospaced; font-style: italic}
+.ST3 {font-family: Monospaced; font-style: italic}
+.comment {color: #808080}
+.ST1 {color: #9876aa}
+.ST0 {color: #808080; font-family: Monospaced; font-weight: bold}
+.whitespace {color: #505050}
+.keyword-directive {color: #cc7832}
+-->
+</style>
+</head>
+<body>
+<table width="100%"><tr><td align="center">C:\Users\saeid\Documents\NetBeansProjects\DaneshBank\src\java\loginAndReg\UserLogin.java</td></tr></table>
+<pre>
+  1 <span class="comment">/*</span>
+  2 <span class="comment"> * To change this license header, choose License Headers in Project Properties.</span>
+  3 <span class="comment"> * To change this template file, choose Tools | Templates</span>
+  4 <span class="comment"> * and open the template in the editor.</span>
+  5 <span class="comment"> */</span>
+  6 <span class="keyword-directive">package</span> loginAndReg;
+  7 
+  8 <span class="keyword-directive">import</span> java.sql.Connection;
+  9 <span class="keyword-directive">import</span> java.sql.PreparedStatement;
+ 10 <span class="keyword-directive">import</span> java.sql.ResultSet;
+ 11 <span class="keyword-directive">import</span> java.sql.SQLException;
+ 12 <span class="comment">import</span> <span class="comment">javassist</span><span class="comment">.</span><span class="comment">bytecode</span><span class="comment">.</span><span class="comment">analysis</span><span class="comment">.</span><span class="comment">Util</span><span class="comment">;</span>
+ 13 <span class="keyword-directive">import</span> javax.faces.application.FacesMessage;
+ 14 <span class="keyword-directive">import</span> javax.faces.bean.ManagedBean;
+ 15 <span class="keyword-directive">import</span> javax.faces.context.FacesContext;
+ 16 <span class="keyword-directive">import</span> javax.servlet.http.HttpServletRequest;
+ 17 <span class="keyword-directive">import</span> javax.servlet.http.HttpSession;
+ 18 
+ 19 
+ 20 <span class="comment">/**</span>
+ 21 <span class="comment"> *</span>
+ 22 <span class="comment"> * </span><span class="ST0">@author</span> <span class="comment">saeid</span>
+ 23  <span class="comment">*/</span>
+ 24 @ManagedBean
+ 25 <span class="keyword-directive">public</span> <span class="keyword-directive">class</span> UserLogin {
+ 26     <span class="keyword-directive">private</span> String <span class="ST1">UserName</span>;
+ 27     <span class="keyword-directive">private</span> String <span class="ST1">Password</span>;
+ 28     <span class="keyword-directive">private</span> <span class="keyword-directive">boolean</span> <span class="ST1">validation</span>=<span class="keyword-directive">false</span>;
+ 29     
+ 30        <span class="keyword-directive">private</span> <span class="keyword-directive">int</span> <span class="comment">passId</span>=<span class="number">0</span>;
+ 31        <span class="keyword-directive">private</span> <span class="keyword-directive">int</span> <span class="comment">userId</span>=<span class="number">1</span>;
+ 32 
+ 33     <span class="keyword-directive">public</span> UserLogin() {
+ 34     }
+ 35 
+ 36     <span class="keyword-directive">public</span> <span class="keyword-directive">boolean</span> <span class="ST2">isValidation</span>() {
+ 37         <span class="keyword-directive">return</span> <span class="ST1">validation</span>;
+ 38     }
+ 39 
+ 40     <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> <span class="ST2">setValidation</span>(<span class="keyword-directive">boolean</span> validation) {
+ 41         <span class="keyword-directive">this</span>.<span class="ST1">validation</span> = validation;
+ 42     }
+ 43     
+ 44     
+ 45     <span class="keyword-directive">public</span> String <span class="ST2">getUserName</span>() {
+ 46         <span class="keyword-directive">return</span> <span class="ST1">UserName</span>;
+ 47     }
+ 48 
+ 49     <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> <span class="ST2">setUserName</span>(String UserName) {
+ 50         <span class="keyword-directive">this</span>.<span class="ST1">UserName</span> = UserName;
+ 51     }
+ 52 
+ 53     <span class="keyword-directive">public</span> String <span class="ST2">getPassword</span>() {
+ 54         <span class="keyword-directive">return</span> <span class="ST1">Password</span>;
+ 55     }
+ 56 
+ 57     <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> <span class="ST2">setPassword</span>(String Password) {
+ 58         <span class="keyword-directive">this</span>.<span class="ST1">Password</span> = Password;
+ 59     }
+ 60     
+ 61     <span class="keyword-directive">public</span> String <span class="ST2">loginProject</span>() <span class="keyword-directive">throws</span> InstantiationException, IllegalAccessException, SQLException {
+ 62         <span class="keyword-directive">boolean</span> result = ThereInDb(<span class="ST1">UserName</span>, <span class="ST1">Password</span>);
+ 63         <span class="keyword-directive">if</span> (result) {
+ 64         <span class="comment">// get Http Session and store username</span>
+ 65         HttpSession session = <span class="ST3">getSession</span>();
+ 66         
+ 67                 
+ 68           session.setAttribute(<span class="character">&quot;</span><span class="character">userName</span><span class="character">&quot;</span>, <span class="ST1">UserName</span>);
+ 69           <span class="keyword-directive">return</span> <span class="character">&quot;</span><span class="character">home</span><span class="character">&quot;</span>;
+ 70         } <span class="keyword-directive">else</span> {
+ 71         FacesContext.<span class="ST3">getCurrentInstance</span>().addMessage(
+ 72         <span class="keyword-directive">null</span>,<span class="keyword-directive">new</span> FacesMessage(FacesMessage.<span class="ST4">SEVERITY_WARN</span>,<span class="character">&quot;</span><span class="character">Invalid Login!</span><span class="character">&quot;</span>,<span class="character">&quot;</span><span class="character">Please Try Again!</span><span class="character">&quot;</span>));
+ 73         <span class="comment">// invalidate session, and redirect to other pages</span>
+ 74         <span class="comment">//message = &quot;Invalid Login. Please Try Again!&quot;;</span>
+ 75         <span class="keyword-directive">return</span> <span class="character">&quot;</span><span class="character">login</span><span class="character">&quot;</span>;
+ 76         }
+ 77     }
+ 78         <span class="keyword-directive">public</span> String <span class="ST2">logout</span>() {
+ 79          HttpSession session = <span class="ST3">getSession</span>();
+ 80             session.invalidate();
+ 81              <span class="keyword-directive">return</span> <span class="character">&quot;</span><span class="character">login</span><span class="character">&quot;</span>;
+ 82 }
+ 83 
+ 84    
+ 85     <span class="keyword-directive">public</span> String <span class="ST2">valiedator</span>() <span class="keyword-directive">throws</span> InstantiationException, IllegalAccessException, SQLException{
+ 86         
+ 87         <span class="keyword-directive">if</span>(<span class="ST1">UserName</span>!=<span class="keyword-directive">null</span>&amp;&amp;<span class="ST1">UserName</span>!=<span class="character">&quot;&quot;</span>&amp;&amp;<span class="ST1">Password</span>!=<span class="keyword-directive">null</span>&amp;&amp;<span class="ST1">Password</span>!=<span class="character">&quot;&quot;</span>&amp;&amp;ThereInDb(<span class="ST1">UserName</span>,<span class="ST1">Password</span>)){
+ 88         <span class="ST1">validation</span>=<span class="keyword-directive">true</span>;
+ 89         <span class="keyword-directive">return</span> <span class="character">&quot;</span><span class="character">index.xhtml</span><span class="character">&quot;</span>;
+ 90         }<span class="keyword-directive">else</span>{
+ 91         
+ 92         <span class="ST1">validation</span>=<span class="keyword-directive">false</span>;
+ 93          <span class="keyword-directive">return</span> <span class="character">&quot;</span><span class="character">f</span><span class="character">&quot;</span>;
+ 94 
+ 95         }
+ 96     }
+ 97 
+ 98     <span class="keyword-directive">private</span> <span class="keyword-directive">boolean</span> <span class="ST2">ThereInDb</span>(String UserName, String Password) <span class="keyword-directive">throws</span> InstantiationException, IllegalAccessException, SQLException {
+ 99              Connection con = <span class="keyword-directive">null</span>;
+100         PreparedStatement ps=<span class="keyword-directive">null</span>;
+101         <span class="keyword-directive">try</span>{
+102        
+103         con=DB.<span class="ST3">getConnection</span>();
+104         ps=con.prepareStatement(<span class="character">&quot;</span><span class="character">SELECT User_UserName,User_Password WHERE User_UserName=? AND User_Password=?</span><span class="character">&quot;</span>);
+105         ps.setString(<span class="number">1</span>,UserName);
+106         ps.setString(<span class="number">2</span>, Password);
+107         
+108         ResultSet rs = ps.executeQuery();
+109         <span class="keyword-directive">if</span> (rs.next()) <span class="comment">// found</span>
+110         {
+111         System.<span class="ST4">out</span>.println(rs.getString(<span class="character">&quot;</span><span class="character">user</span><span class="character">&quot;</span>));
+112         <span class="keyword-directive">return</span> <span class="keyword-directive">true</span>;
+113         
+114         }
+115          <span class="keyword-directive">else</span> {
+116         <span class="keyword-directive">return</span> <span class="keyword-directive">false</span>;
+117         
+118         
+119          }
+120         
+121             }<span class="keyword-directive">catch</span> (Exception ex) {
+122         System.<span class="ST4">out</span>.println(<span class="character">&quot;</span><span class="character">Error in login() --&gt;</span><span class="character">&quot;</span> + ex.getMessage());
+123         <span class="keyword-directive">return</span> <span class="keyword-directive">false</span>;
+124         } <span class="keyword-directive">finally</span> {
+125         DB.<span class="ST3">close</span>(con);
+126 
+127         }
+128     }
+129 
+130 
+131       <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> HttpSession <span class="ST5">getSession</span>() {
+132         <span class="keyword-directive">return</span> (HttpSession)
+133         FacesContext.
+134         <span class="ST3">getCurrentInstance</span>().
+135         getExternalContext().
+136         getSession(<span class="keyword-directive">false</span>);
+137         }
+138         <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> HttpServletRequest <span class="ST5">getRequest</span>() {
+139         <span class="keyword-directive">return</span> (HttpServletRequest) FacesContext.
+140         <span class="ST3">getCurrentInstance</span>().
+141         getExternalContext().getRequest();
+142         }
+143         <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> String <span class="ST5">getUserName2</span>()
+144         {
+145          HttpSession session = (HttpSession) FacesContext.<span class="ST3">getCurrentInstance</span>().getExternalContext().getSession(<span class="keyword-directive">false</span>);
+146         <span class="keyword-directive">return</span> session.getAttribute(<span class="character">&quot;</span><span class="character">username</span><span class="character">&quot;</span>).toString();
+147         }
+148         <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> String <span class="ST5">getUserId</span>()
+149         {
+150         HttpSession session = <span class="ST3">getSession</span>();
+151         <span class="keyword-directive">if</span> ( session != <span class="keyword-directive">null</span> )
+152         <span class="keyword-directive">return</span> (String) session.getAttribute(<span class="character">&quot;</span><span class="character">userid</span><span class="character">&quot;</span>);
+153         <span class="keyword-directive">else</span>
+154         <span class="keyword-directive">return</span> <span class="keyword-directive">null</span>;
+155         }
+156 
+157 }
+</pre></body>
+</html>

@@ -1,0 +1,259 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<title>localBeamMapColoring.java</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<style type="text/css">
+<!--
+body {color: #a9b7c6; background-color: #2b2b2b; font-family: Monospaced}
+pre {color: #a9b7c6; background-color: #2b2b2b; font-family: Monospaced}
+table {color: #888888; background-color: #313335; font-family: Monospaced}
+.ST5 {color: #ffc66d; font-family: Monospaced; font-style: italic}
+.number {color: #6897bb}
+.ST2 {color: #ffc66d}
+.whitespace {color: #505050}
+.keyword-directive {color: #cc7832}
+.character {color: #6a8759}
+.ST4 {font-family: Monospaced; font-style: italic}
+.ST3 {color: #9876aa; font-family: Monospaced; font-style: italic}
+.comment {color: #808080}
+.ST1 {color: #9876aa}
+.ST0 {color: #808080; font-family: Monospaced; font-weight: bold}
+-->
+</style>
+</head>
+<body>
+<table width="100%"><tr><td align="center">D:\aiProject\src\aiproject\CSP\localBeamMapColoring.java</td></tr></table>
+<pre>
+  1 <span class="comment">/*</span>
+  2 <span class="comment"> * To change this license header, choose License Headers in Project Properties.</span>
+  3 <span class="comment"> * To change this template file, choose Tools | Templates</span>
+  4 <span class="comment"> * and open the template in the editor.</span>
+  5 <span class="comment"> */</span>
+  6 
+  7 <span class="keyword-directive">package</span> aiproject.CSP;
+  8 
+  9 
+ 10 <span class="keyword-directive">import</span> aiproject.GraphColoring;
+ 11 <span class="keyword-directive">import</span> java.util.Random;
+ 12 <span class="keyword-directive">import</span> java.util.Scanner;
+ 13 
+ 14 
+ 15 
+ 16 <span class="comment">/**</span>
+ 17 <span class="comment"> *</span>
+ 18 <span class="comment"> * </span><span class="ST0">@author</span> <span class="comment">saeid</span>
+ 19  <span class="comment">*/</span>
+ 20 <span class="keyword-directive">public</span> <span class="keyword-directive">class</span> localBeamMapColoring {
+ 21     <span class="comment">/**</span>
+ 22 <span class="comment">     * </span><span class="comment">به</span> <span class="comment">صورت</span> <span class="comment">پیشفرض</span><span class="comment">:</span>
+ 23 <span class="comment">     * </span><span class="comment">k</span><span class="comment">=20;</span>
+ 24 <span class="comment">     * </span><span class="comment">الگوریتم</span> <span class="comment">پرتو</span> <span class="comment">محلی</span><span class="comment"> :</span>
+ 25 <span class="comment">     * </span><span class="comment">مراحل</span><span class="comment">:</span>
+ 26 <span class="comment">     * 1-</span><span class="comment">ایجاد</span> <span class="comment">بیست</span> <span class="comment">حالت</span> <span class="comment">تصادفی</span> <span class="comment">اولیه</span>
+ 27 <span class="comment">     * 2-</span><span class="comment">ایجاد</span> <span class="comment">بیست</span> <span class="comment">حالت</span> <span class="comment">بعدی</span> <span class="comment">هر</span> <span class="comment">یک</span> <span class="comment">از</span> <span class="comment">بیست</span> <span class="comment">حال</span> <span class="comment">اولیه</span> 
+ 28 <span class="comment">     * 3-</span><span class="comment">انتخاب</span> <span class="comment">بیست</span> <span class="comment">تا</span> <span class="comment">از</span> <span class="comment">بهترین</span> <span class="comment">ها</span> 
+ 29 <span class="comment">     * 4-</span><span class="comment">در</span> <span class="comment">صورت</span> <span class="comment">پیدا</span> <span class="comment">نشدن</span> <span class="comment">جواب</span> <span class="comment">به</span> <span class="comment">مرحله</span> <span class="comment">دو</span> <span class="comment">میرود</span>
+ 30 <span class="comment">     * </span>
+ 31      <span class="comment">*/</span>
+ 32   <span class="keyword-directive">int</span>[] <span class="ST1">hurestics</span> = <span class="keyword-directive">new</span> <span class="keyword-directive">int</span>[<span class="number">20</span>];
+ 33   <span class="keyword-directive">int</span>[] <span class="ST1">hurestics2</span> = <span class="keyword-directive">new</span> <span class="keyword-directive">int</span>[<span class="number">20</span>];
+ 34   <span class="keyword-directive">int</span>[][] <span class="ST1">randStates</span> = <span class="keyword-directive">new</span> <span class="keyword-directive">int</span>[<span class="number">20</span>][];
+ 35   <span class="keyword-directive">int</span>[][] <span class="ST1">nextStates</span> = <span class="keyword-directive">new</span> <span class="keyword-directive">int</span>[<span class="number">20</span>][];
+ 36   <span class="keyword-directive">char</span>[] <span class="ST1">vertexes</span>;
+ 37 
+ 38 
+ 39 
+ 40 
+ 41     <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> <span class="ST2">mapColoring</span>(<span class="keyword-directive">int</span>[][] m, <span class="keyword-directive">int</span> numOfColor) {
+ 42         
+ 43         
+ 44         <span class="comment">//an array for getting vertex titles</span>
+ 45         <span class="ST1">vertexes</span> = <span class="keyword-directive">new</span> <span class="keyword-directive">char</span>[m.<span class="ST1">length</span>];
+ 46         <span class="comment">///initial titles</span>
+ 47         <span class="keyword-directive">char</span>[] ch = <span class="keyword-directive">new</span> <span class="keyword-directive">char</span>[]{<span class="character">&#39;</span><span class="character">A</span><span class="character">&#39;</span>, <span class="character">&#39;</span><span class="character">B</span><span class="character">&#39;</span>, <span class="character">&#39;</span><span class="character">C</span><span class="character">&#39;</span>, <span class="character">&#39;</span><span class="character">D</span><span class="character">&#39;</span>, <span class="character">&#39;</span><span class="character">E</span><span class="character">&#39;</span>, <span class="character">&#39;</span><span class="character">F</span><span class="character">&#39;</span>, <span class="character">&#39;</span><span class="character">G</span><span class="character">&#39;</span>, <span class="character">&#39;</span><span class="character">H</span><span class="character">&#39;</span>, <span class="character">&#39;</span><span class="character">I</span><span class="character">&#39;</span>, <span class="character">&#39;</span><span class="character">J</span><span class="character">&#39;</span>, <span class="character">&#39;</span><span class="character">K</span><span class="character">&#39;</span>, <span class="character">&#39;</span><span class="character">L</span><span class="character">&#39;</span>, <span class="character">&#39;</span><span class="character">M</span><span class="character">&#39;</span>, <span class="character">&#39;</span><span class="character">N</span><span class="character">&#39;</span>, <span class="character">&#39;</span><span class="character">O</span><span class="character">&#39;</span>, <span class="character">&#39;</span><span class="character">P</span><span class="character">&#39;</span>, <span class="character">&#39;</span><span class="character">Q</span><span class="character">&#39;</span>, <span class="character">&#39;</span><span class="character">R</span><span class="character">&#39;</span>, <span class="character">&#39;</span><span class="character">S</span><span class="character">&#39;</span>, <span class="character">&#39;</span><span class="character">T</span><span class="character">&#39;</span>, <span class="character">&#39;</span><span class="character">U</span><span class="character">&#39;</span>, <span class="character">&#39;</span><span class="character">V</span><span class="character">&#39;</span>, <span class="character">&#39;</span><span class="character">W</span><span class="character">&#39;</span>, <span class="character">&#39;</span><span class="character">X</span><span class="character">&#39;</span>, <span class="character">&#39;</span><span class="character">Y</span><span class="character">&#39;</span>, <span class="character">&#39;</span><span class="character">Z</span><span class="character">&#39;</span>};
+ 48         <span class="comment">//giving vertexes title</span>
+ 49         <span class="keyword-directive">for</span> (<span class="keyword-directive">int</span> i = <span class="number">0</span>; i &lt; m.<span class="ST1">length</span>; i++) {
+ 50             <span class="ST1">vertexes</span>[i] = ch[i];
+ 51         }
+ 52         <span class="comment">//checking graph coloring possibality </span>
+ 53         <span class="comment">///if sum of one&#39;s of m matrix divide number of vertexes mines one equal or less than number of color there is solution else there is no one</span>
+ 54         <span class="keyword-directive">if</span> (possibality(m, numOfColor)) {
+ 55             <span class="keyword-directive">for</span> (<span class="keyword-directive">int</span> i = <span class="number">0</span>; i &lt; <span class="number">20</span>; i++) {
+ 56                 <span class="keyword-directive">int</span>[] vAllocatedColor = randomColoring(numOfColor, <span class="ST1">vertexes</span>);
+ 57                 <span class="keyword-directive">int</span> h = huresticCalculator(vAllocatedColor, m);
+ 58                 <span class="ST1">randStates</span>[i] = vAllocatedColor;
+ 59                 <span class="ST1">hurestics</span>[i] = h;
+ 60             }
+ 61          localBeam();
+ 62             <span class="comment">///////introducing the next 20 states//////////</span>
+ 63            <span class="keyword-directive">while</span>(goalFound(<span class="ST1">randStates</span>,m,numOfColor,<span class="ST1">hurestics</span>)==<span class="keyword-directive">false</span>){
+ 64                 <span class="keyword-directive">for</span> (<span class="keyword-directive">int</span> i = <span class="number">0</span>; i &lt; <span class="number">20</span>; i++) {
+ 65                 <span class="keyword-directive">int</span>[] vAllocatedColor = randomColoring(numOfColor, <span class="ST1">vertexes</span>);
+ 66                 <span class="keyword-directive">int</span> h = huresticCalculator(vAllocatedColor, m);
+ 67                 <span class="ST1">nextStates</span>[i] = vAllocatedColor;
+ 68                 <span class="ST1">hurestics2</span>[i] = h;
+ 69             }
+ 70                 <span class="comment">//////saving 20 of bests///////</span>
+ 71                 <span class="keyword-directive">for</span> (<span class="keyword-directive">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) {
+ 72                <span class="ST1">randStates</span>[i]=<span class="ST1">randStates</span>[i+<span class="number">10</span>]; 
+ 73                <span class="ST1">hurestics</span>[i]=<span class="ST1">hurestics</span>[i+<span class="number">10</span>];
+ 74             }
+ 75             <span class="keyword-directive">for</span> (<span class="keyword-directive">int</span> i = <span class="number">11</span>; i &lt; <span class="number">20</span>; i++) {
+ 76                <span class="ST1">randStates</span>[i]=<span class="ST1">nextStates</span>[i+<span class="number">10</span>]; 
+ 77                <span class="ST1">hurestics</span>[i]=<span class="ST1">hurestics2</span>[i+<span class="number">10</span>];
+ 78             }
+ 79                 
+ 80            }
+ 81            
+ 82            
+ 83         } <span class="keyword-directive">else</span> {
+ 84             System.<span class="ST3">out</span>.println(<span class="character">&quot;</span><span class="character">there is no sulotion</span><span class="character">&quot;</span>);
+ 85         }
+ 86     }
+ 87 
+ 88 
+ 89     <span class="keyword-directive">private</span> <span class="keyword-directive">void</span> <span class="ST2">localBeam</span>() {
+ 90         <span class="comment">////////sorting all 20 states////////</span>
+ 91         <span class="keyword-directive">int</span> temp;
+ 92         <span class="keyword-directive">int</span>[] temp1;
+ 93         <span class="keyword-directive">for</span> (<span class="keyword-directive">int</span> i = <span class="number">0</span>; i &lt; <span class="number">20</span> - <span class="number">1</span>; i++) {
+ 94             <span class="keyword-directive">for</span> (<span class="keyword-directive">int</span> j = <span class="number">0</span>; j &lt; <span class="number">20</span> - <span class="number">1</span> - i; j++) {
+ 95                 <span class="keyword-directive">if</span> (<span class="ST1">hurestics</span>[j] &gt; <span class="ST1">hurestics</span>[j + <span class="number">1</span>]) {
+ 96                     temp = <span class="ST1">hurestics</span>[j];
+ 97                     temp1 = <span class="ST1">randStates</span>[j];
+ 98                     <span class="ST1">hurestics</span>[j] = <span class="ST1">hurestics</span>[j + <span class="number">1</span>];
+ 99                     <span class="ST1">randStates</span>[j] = <span class="ST1">randStates</span>[j + <span class="number">1</span>];
+100                     <span class="ST1">hurestics</span>[j + <span class="number">1</span>] = temp;
+101                     <span class="ST1">randStates</span>[j + <span class="number">1</span>] = temp1;
+102                 }
+103             }
+104         
+105             <span class="keyword-directive">for</span> (i = <span class="number">0</span>; i &lt; <span class="number">20</span> - <span class="number">1</span>; i++) {
+106             <span class="keyword-directive">for</span> (<span class="keyword-directive">int</span> j = <span class="number">0</span>; j &lt; <span class="number">20</span> - <span class="number">1</span> - i; j++) {
+107                 <span class="keyword-directive">if</span> (<span class="ST1">hurestics</span>[j] &gt; <span class="ST1">hurestics</span>[j + <span class="number">1</span>]) {
+108                     temp = <span class="ST1">hurestics</span>[j];
+109                     temp1 = <span class="ST1">randStates</span>[j];
+110                     <span class="ST1">hurestics</span>[j] = <span class="ST1">hurestics</span>[j + <span class="number">1</span>];
+111                     <span class="ST1">randStates</span>[j] = <span class="ST1">randStates</span>[j + <span class="number">1</span>];
+112                     <span class="ST1">hurestics</span>[j + <span class="number">1</span>] = temp;
+113                     <span class="ST1">randStates</span>[j + <span class="number">1</span>] = temp1;
+114                 }
+115             }
+116         }
+117 
+118         <span class="comment">/////printing 20 random first state////</span>
+119         System.<span class="ST3">out</span>.println(<span class="character">&quot;</span><span class="character">20 first state is:</span><span class="character">&quot;</span>);
+120         <span class="keyword-directive">for</span> (<span class="keyword-directive">int</span> p = <span class="number">0</span>; p &lt; <span class="number">20</span>; p++) {
+121             statePrinter(<span class="ST1">randStates</span>[p], <span class="ST1">vertexes</span>);
+122             System.<span class="ST3">out</span>.println(<span class="character">&quot;</span><span class="character">hurestic is=</span><span class="character">&quot;</span> + <span class="ST1">hurestics</span>[p]);
+123         }
+124        
+125 
+126     }
+127 
+128     }
+129     <span class="keyword-directive">private</span> <span class="keyword-directive">int</span>[] <span class="ST2">randomColoring</span>(<span class="keyword-directive">int</span> numOfColor, <span class="keyword-directive">char</span>[] vertexes) {
+130         <span class="keyword-directive">int</span>[] vAllocatedColor = <span class="keyword-directive">new</span> <span class="keyword-directive">int</span>[vertexes.<span class="ST1">length</span>];
+131         Random r = <span class="keyword-directive">new</span> Random();
+132         <span class="keyword-directive">for</span> (<span class="keyword-directive">int</span> i = <span class="number">0</span>; i &lt; vertexes.<span class="ST1">length</span>; i++) {
+133             vAllocatedColor[i] = Math.<span class="ST4">abs</span>(r.nextInt() % numOfColor);
+134         }
+135 
+136         <span class="keyword-directive">return</span> vAllocatedColor;
+137     }
+138 
+139 
+140     <span class="keyword-directive">private</span> <span class="keyword-directive">boolean</span> <span class="ST2">possibality</span>(<span class="keyword-directive">int</span>[][] m, <span class="keyword-directive">int</span> numOfColor) {
+141         <span class="keyword-directive">int</span> sum = <span class="number">0</span>;
+142         <span class="keyword-directive">boolean</span> ret = <span class="keyword-directive">false</span>;
+143         <span class="keyword-directive">for</span> (<span class="keyword-directive">int</span> i = <span class="number">0</span>; i &lt; m.<span class="ST1">length</span>; i++) {
+144             <span class="keyword-directive">for</span> (<span class="keyword-directive">int</span> j = <span class="number">0</span>; j &lt; m.<span class="ST1">length</span>; j++) {
+145                 <span class="keyword-directive">if</span> (m[i][j] == <span class="number">1</span>) {
+146                     sum += <span class="number">1</span>;
+147                 }
+148             }
+149         }
+150         <span class="keyword-directive">if</span> (sum / (m.<span class="ST1">length</span> - <span class="number">1</span>) &lt;= numOfColor) {
+151             ret = <span class="keyword-directive">true</span>;
+152         } <span class="keyword-directive">else</span> {
+153             ret = <span class="keyword-directive">false</span>;
+154         }
+155         <span class="keyword-directive">return</span> ret;
+156     }
+157 
+158 
+159     <span class="keyword-directive">private</span> <span class="keyword-directive">int</span> <span class="ST2">huresticCalculator</span>(<span class="keyword-directive">int</span>[] vAllocatedColor, <span class="keyword-directive">int</span>[][] m) {
+160         <span class="keyword-directive">int</span> h = <span class="number">0</span>;
+161         <span class="keyword-directive">for</span> (<span class="keyword-directive">int</span> i = <span class="number">0</span>; i &lt; m.<span class="ST1">length</span>; i++) {
+162             <span class="keyword-directive">for</span> (<span class="keyword-directive">int</span> j = <span class="number">0</span>; j &lt; m.<span class="ST1">length</span>; j++) {
+163                 <span class="keyword-directive">if</span> (m[i][j] == <span class="number">1</span>) {
+164                     <span class="keyword-directive">if</span> (vAllocatedColor[i] == vAllocatedColor[j]) {
+165                         h--;
+166                     } <span class="keyword-directive">else</span> {
+167                         h++;
+168                     }
+169                 }
+170             }
+171         }
+172         <span class="keyword-directive">return</span> h;
+173     }
+174 
+175 
+176     <span class="keyword-directive">private</span> <span class="keyword-directive">void</span> <span class="ST2">statePrinter</span>(<span class="keyword-directive">int</span>[] vAllocatedColor, <span class="keyword-directive">char</span>[] vertexes) {
+177         <span class="keyword-directive">for</span> (<span class="keyword-directive">int</span> i = <span class="number">0</span>; i &lt; vAllocatedColor.<span class="ST1">length</span>; i++) {
+178             System.<span class="ST3">out</span>.println(vertexes[i] + <span class="character">&quot;</span><span class="character">:</span><span class="character">&quot;</span> + vAllocatedColor[i]);
+179 
+180         }
+181     }
+182    
+183     <span class="keyword-directive">private</span> <span class="keyword-directive">boolean</span> <span class="ST2">goalFound</span>(<span class="keyword-directive">int</span>[][] randStates, <span class="keyword-directive">int</span>[][] m, <span class="keyword-directive">int</span> numOfColor, <span class="keyword-directive">int</span>[] hurestics1) {
+184         <span class="keyword-directive">boolean</span> ret=<span class="keyword-directive">false</span>;
+185         <span class="keyword-directive">int</span> ghurestic=<span class="number">0</span>;
+186         GraphColoring gc=<span class="keyword-directive">new</span> GraphColoring();
+187         gc.graphColor(m, numOfColor);
+188         System.<span class="ST3">out</span>.println(<span class="character">&quot;</span><span class="keyword-directive">\n</span><span class="keyword-directive">\n</span><span class="character">&quot;</span>);
+189         
+190         <span class="keyword-directive">for</span> (<span class="keyword-directive">int</span> i = <span class="number">0</span>; i &lt; gc.<span class="ST1">color</span>.<span class="ST1">length</span>; i++){
+191             gc.<span class="ST1">color</span>[i]-=<span class="number">1</span>;    
+192             }
+193         ghurestic=huresticCalculator(gc.<span class="ST1">color</span>, m);
+194         
+195         <span class="keyword-directive">for</span>(<span class="keyword-directive">int</span> o=<span class="number">0</span>;o&lt;<span class="number">20</span>;o++){
+196             <span class="keyword-directive">if</span>(hurestics1[o]==ghurestic){
+197               ret=<span class="keyword-directive">true</span>;
+198                 System.<span class="ST3">out</span>.println(<span class="character">&quot;</span><span class="character">goal is found !</span><span class="character">&quot;</span>);
+199                 statePrinter(randStates[o], <span class="ST1">vertexes</span>);
+200                 System.<span class="ST3">out</span>.println(<span class="character">&quot;</span><span class="character">and the goal hurestic is:</span><span class="character">&quot;</span>+hurestics1[o]);
+201             }<span class="keyword-directive">else</span>{
+202                 ret=<span class="keyword-directive">false</span>;
+203                 
+204             }
+205         }
+206        
+207      <span class="keyword-directive">return</span>  ret;
+208     }
+209 
+210  
+211      <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">void</span> <span class="ST5">main</span>(String[] args) {
+212         localBeamMapColoring m=<span class="keyword-directive">new</span> localBeamMapColoring();
+213         System.<span class="ST3">out</span>.println(<span class="character">&quot;</span><span class="character">please enter number of vertexes :</span><span class="character">&quot;</span>);
+214         Scanner d=<span class="keyword-directive">new</span> Scanner(System.<span class="ST3">in</span>);
+215         
+216         <span class="keyword-directive">int</span> vert=d.nextInt();
+217         System.<span class="ST3">out</span>.println(<span class="character">&quot;</span><span class="character">please enter number of colors</span><span class="character">&quot;</span>);
+218         <span class="keyword-directive">int</span> noc=d.nextInt();
+219         <span class="keyword-directive">int</span>[][] vb=<span class="keyword-directive">new</span> <span class="keyword-directive">int</span>[vert][vert];
+220         System.<span class="ST3">out</span>.println(<span class="character">&quot;</span><span class="character">please enter neighberhood graph 1 for neighbers and 0 for others</span><span class="character">&quot;</span>);
+221         <span class="keyword-directive">for</span> (<span class="keyword-directive">int</span> i = <span class="number">0</span>; i &lt; vert; i++) {
+222             <span class="keyword-directive">for</span> (<span class="keyword-directive">int</span> j = <span class="number">0</span>; j &lt; vert; j++) {
+223                 vb[i][j]=d.nextInt();
+224             }
+225         }
+226         m.mapColoring(vb, noc);
+227     }
+228 }
+229 
+230 
+</pre></body>
+</html>

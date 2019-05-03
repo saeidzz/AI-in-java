@@ -1,0 +1,168 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<title>NQueenProblem.java</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<style type="text/css">
+<!--
+body {color: #a9b7c6; background-color: #2b2b2b; font-family: Monospaced}
+pre {color: #a9b7c6; background-color: #2b2b2b; font-family: Monospaced}
+table {color: #888888; background-color: #313335; font-family: Monospaced}
+.ST4 {color: #ffc66d; font-family: Monospaced; font-style: italic}
+.number {color: #6897bb}
+.ST3 {color: #ffc66d}
+.whitespace {color: #505050}
+.keyword-directive {color: #cc7832}
+.character {color: #6a8759}
+.ST2 {color: #9876aa; font-family: Monospaced; font-style: italic}
+.comment {color: #808080}
+.ST1 {color: #9876aa}
+.ST0 {color: #808080; font-family: Monospaced; font-weight: bold}
+-->
+</style>
+</head>
+<body>
+<table width="100%"><tr><td align="center">D:\aiProject\src\aiproject\NQueenProblem.java</td></tr></table>
+<pre>
+  1 <span class="comment">/*</span>
+  2 <span class="comment"> * To change this license header, choose License Headers in Project Properties.</span>
+  3 <span class="comment"> * To change this template file, choose Tools | Templates</span>
+  4 <span class="comment"> * and open the template in the editor.</span>
+  5 <span class="comment"> */</span>
+  6 
+  7 <span class="keyword-directive">package</span> aiproject;
+  8 
+  9 
+ 10 <span class="keyword-directive">import</span> java.util.Scanner;
+ 11 
+ 12 
+ 13 
+ 14 <span class="comment">/**</span>
+ 15 <span class="comment"> *</span>
+ 16 <span class="comment"> * </span><span class="ST0">@author</span> <span class="comment">saeid</span>
+ 17  <span class="comment">*/</span>
+ 18 <span class="keyword-directive">public</span> <span class="keyword-directive">class</span> NQueenProblem
+ 19 
+ 20 {
+ 21 
+ 22         
+ 23     Scanner <span class="ST1">s</span>=<span class="keyword-directive">new</span> Scanner(System.<span class="ST2">in</span>);
+ 24     
+ 25     <span class="keyword-directive">final</span> <span class="keyword-directive">int</span> <span class="ST1">N</span> = <span class="ST1">s</span>.nextInt();
+ 26  
+ 27     <span class="comment">/* A utility function to print solution */</span>
+ 28    <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> <span class="ST3">printSolution</span>(<span class="keyword-directive">int</span> board[][])
+ 29     {   
+ 30         
+ 31         <span class="keyword-directive">for</span> (<span class="keyword-directive">int</span> i = <span class="number">0</span>; i &lt; <span class="ST1">N</span>; i++)
+ 32         {
+ 33             <span class="keyword-directive">for</span> (<span class="keyword-directive">int</span> j = <span class="number">0</span>; j &lt; <span class="ST1">N</span>; j++)
+ 34                 System.<span class="ST2">out</span>.print(<span class="character">&quot;</span> <span class="character">&quot;</span> + board[i][j]
+ 35                                  + <span class="character">&quot;</span> <span class="character">&quot;</span>);
+ 36             System.<span class="ST2">out</span>.println();
+ 37         }
+ 38     }
+ 39  
+ 40     <span class="comment">/* A utility function to check if a queen can</span>
+ 41 <span class="comment">       be placed on board[row][col]. Note that this</span>
+ 42 <span class="comment">       function is called when &quot;col&quot; queens are already</span>
+ 43 <span class="comment">       placeed in columns from 0 to col -1. So we need</span>
+ 44 <span class="comment">       to check only left side for attacking queens */</span>
+ 45     <span class="keyword-directive">boolean</span> <span class="ST3">isSafe</span>(<span class="keyword-directive">int</span> board[][], <span class="keyword-directive">int</span> row, <span class="keyword-directive">int</span> col)
+ 46     {
+ 47         <span class="keyword-directive">int</span> i, j;
+ 48  
+ 49         <span class="comment">/* Check this row on left side */</span>
+ 50         <span class="keyword-directive">for</span> (i = <span class="number">0</span>; i &lt; col; i++)
+ 51             <span class="keyword-directive">if</span> (board[row][i] == <span class="number">1</span>)
+ 52                 <span class="keyword-directive">return</span> <span class="keyword-directive">false</span>;
+ 53  
+ 54         <span class="comment">/* Check upper diagonal on left side */</span>
+ 55         <span class="keyword-directive">for</span> (i=row, j=col; i&gt;=<span class="number">0</span> &amp;&amp; j&gt;=<span class="number">0</span>; i--, j--)
+ 56             <span class="keyword-directive">if</span> (board[i][j] == <span class="number">1</span>)
+ 57                 <span class="keyword-directive">return</span> <span class="keyword-directive">false</span>;
+ 58  
+ 59         <span class="comment">/* Check lower diagonal on left side */</span>
+ 60         <span class="keyword-directive">for</span> (i=row, j=col; j&gt;=<span class="number">0</span> &amp;&amp; i&lt;<span class="ST1">N</span>; i++, j--)
+ 61             <span class="keyword-directive">if</span> (board[i][j] == <span class="number">1</span>)
+ 62                 <span class="keyword-directive">return</span> <span class="keyword-directive">false</span>;
+ 63  
+ 64         <span class="keyword-directive">return</span> <span class="keyword-directive">true</span>;
+ 65     }
+ 66  
+ 67     <span class="comment">/* A recursive utility function to solve N</span>
+ 68 <span class="comment">       Queen problem */</span>
+ 69     <span class="keyword-directive">boolean</span> <span class="ST3">solveNQUtil</span>(<span class="keyword-directive">int</span> board[][], <span class="keyword-directive">int</span> col)
+ 70     {
+ 71         <span class="comment">/* base case: If all queens are placed</span>
+ 72 <span class="comment">           then return true */</span>
+ 73         <span class="keyword-directive">if</span> (col &gt;= <span class="ST1">N</span>)
+ 74             <span class="keyword-directive">return</span> <span class="keyword-directive">true</span>;
+ 75  
+ 76         <span class="comment">/* Consider this column and try placing</span>
+ 77 <span class="comment">           this queen in all rows one by one */</span>
+ 78         <span class="keyword-directive">for</span> (<span class="keyword-directive">int</span> i = <span class="number">0</span>; i &lt; <span class="ST1">N</span>; i++)
+ 79         {
+ 80             <span class="comment">/* Check if queen can be placed on</span>
+ 81 <span class="comment">               board[i][col] */</span>
+ 82             <span class="keyword-directive">if</span> (isSafe(board, i, col))
+ 83             {
+ 84                 <span class="comment">/* Place this queen in board[i][col] */</span>
+ 85                 board[i][col] = <span class="number">1</span>;
+ 86  
+ 87                 <span class="comment">/* recur to place rest of the queens */</span>
+ 88                 <span class="keyword-directive">if</span> (solveNQUtil(board, col + <span class="number">1</span>) == <span class="keyword-directive">true</span>)
+ 89                     <span class="keyword-directive">return</span> <span class="keyword-directive">true</span>;
+ 90  
+ 91                 <span class="comment">/* If placing queen in board[i][col]</span>
+ 92 <span class="comment">                   doesn&#39;t lead to a solution then</span>
+ 93 <span class="comment">                   remove queen from board[i][col] */</span>
+ 94                 board[i][col] = <span class="number">0</span>; <span class="comment">// BACKTRACK</span>
+ 95             }
+ 96         }
+ 97  
+ 98         <span class="comment">/* If queen can not be place in any row in</span>
+ 99 <span class="comment">           this colum col, then return false */</span>
+100         <span class="keyword-directive">return</span> <span class="keyword-directive">false</span>;
+101     }
+102  
+103     <span class="comment">/* This function solves the N Queen problem using</span>
+104 <span class="comment">       Backtracking.  It mainly uses  solveNQUtil() to</span>
+105 <span class="comment">       solve the problem. It returns false if queens</span>
+106 <span class="comment">       cannot be placed, otherwise return true and</span>
+107 <span class="comment">       prints placement of queens in the form of 1s.</span>
+108 <span class="comment">       Please note that there may be more than one</span>
+109 <span class="comment">       solutions, this function prints one of the</span>
+110 <span class="comment">       feasible solutions.*/</span>
+111   <span class="keyword-directive">public</span>  <span class="keyword-directive">boolean</span> <span class="ST3">solveNQ</span>()
+112     {
+113         <span class="keyword-directive">int</span>[][] board=<span class="keyword-directive">new</span> <span class="keyword-directive">int</span>[<span class="ST1">N</span>][<span class="ST1">N</span>];
+114         <span class="keyword-directive">for</span>(<span class="keyword-directive">int</span> i=<span class="number">0</span>;i&lt;<span class="ST1">N</span>;i++){
+115             <span class="keyword-directive">for</span> (<span class="keyword-directive">int</span> j = <span class="number">0</span>; j &lt; <span class="ST1">N</span>; j++) {
+116                 board[i][j]=<span class="number">0</span>;
+117             }
+118  
+119         }
+120  
+121         <span class="keyword-directive">if</span> (solveNQUtil(board, <span class="number">0</span>) == <span class="keyword-directive">false</span>)
+122         {
+123             System.<span class="ST2">out</span>.print(<span class="character">&quot;</span><span class="character">Solution does not exist</span><span class="character">&quot;</span>);
+124             <span class="keyword-directive">return</span> <span class="keyword-directive">false</span>;
+125         }
+126         printSolution(board);
+127         <span class="keyword-directive">return</span> <span class="keyword-directive">true</span>;
+128     }
+129  
+130     <span class="comment">// driver program to test above function</span>
+131     <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">void</span> <span class="ST4">main</span>(String args[])
+132     {
+133         System.<span class="ST2">out</span>.println(<span class="character">&quot;</span><span class="character">please enter number of queens:</span><span class="character">&quot;</span>);
+134         NQueenProblem Queen = <span class="keyword-directive">new</span> NQueenProblem();
+135         System.<span class="ST2">out</span>.println(<span class="character">&quot;</span><span class="character">solution is :</span><span class="character">&quot;</span>);
+136         Queen.solveNQ();
+137     }
+138 }
+139 <span class="comment">// This code is contributed by Abhishek Shankhadhar</span>
+140 
+</pre></body>
+</html>

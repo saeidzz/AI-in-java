@@ -1,0 +1,311 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<title>gaNqueen.java</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<style type="text/css">
+<!--
+body {color: #a9b7c6; background-color: #2b2b2b; font-family: Monospaced}
+pre {color: #a9b7c6; background-color: #2b2b2b; font-family: Monospaced}
+table {color: #888888; background-color: #313335; font-family: Monospaced}
+.ST5 {color: #ffc66d; font-family: Monospaced; font-style: italic}
+.number {color: #6897bb}
+.ST2 {color: #ffc66d}
+.whitespace {color: #505050}
+.keyword-directive {color: #cc7832}
+.character {color: #6a8759}
+.ST4 {font-family: Monospaced; font-style: italic}
+.ST3 {color: #9876aa; font-family: Monospaced; font-style: italic}
+.comment {color: #808080}
+.ST1 {color: #9876aa}
+.ST0 {color: #808080; font-family: Monospaced; font-weight: bold}
+-->
+</style>
+</head>
+<body>
+<table width="100%"><tr><td align="center">D:\aiProject\src\aiproject\CSP\gaNqueen.java</td></tr></table>
+<pre>
+  1 <span class="comment">/*</span>
+  2 <span class="comment"> * To change this license header, choose License Headers in Project Properties.</span>
+  3 <span class="comment"> * To change this template file, choose Tools | Templates</span>
+  4 <span class="comment"> * and open the template in the editor.</span>
+  5 <span class="comment"> */</span>
+  6 
+  7 <span class="keyword-directive">package</span> aiproject.CSP;
+  8 
+  9 <span class="comment">import</span> <span class="comment">static</span> <span class="comment">java</span><span class="comment">.</span><span class="comment">lang</span><span class="comment">.</span><span class="comment">Math</span><span class="comment">.</span><span class="comment">abs</span><span class="comment">;</span>
+ 10 <span class="keyword-directive">import</span> java.util.Random;
+ 11 <span class="keyword-directive">import</span> java.util.Scanner;
+ 12 <span class="keyword-directive">import</span> <span class="keyword-directive">static</span> java.lang.Math.abs;
+ 13 
+ 14 
+ 15 <span class="comment">/**</span>
+ 16 <span class="comment"> *</span>
+ 17 <span class="comment"> * </span><span class="ST0">@author</span> <span class="comment">saeid</span>
+ 18  <span class="comment">*/</span>
+ 19 <span class="keyword-directive">public</span> <span class="keyword-directive">class</span> gaNqueen {
+ 20     <span class="keyword-directive">int</span>[] <span class="ST1">neighbersHu</span>=<span class="keyword-directive">new</span> <span class="keyword-directive">int</span>[<span class="number">4</span>];
+ 21      <span class="keyword-directive">int</span>[][][] <span class="ST1">fourRandState</span>;
+ 22     
+ 23    <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> <span class="ST2">nqueen</span>(<span class="keyword-directive">int</span> numberOfQueen){
+ 24        Random r=<span class="keyword-directive">new</span> Random();
+ 25       <span class="ST1">fourRandState</span>=<span class="keyword-directive">new</span> <span class="keyword-directive">int</span>[<span class="number">4</span>][numberOfQueen][numberOfQueen];
+ 26 
+ 27        <span class="comment">/////neiber states/////</span>
+ 28         <span class="keyword-directive">int</span>[][] rt=<span class="keyword-directive">new</span> <span class="keyword-directive">int</span>[numberOfQueen][numberOfQueen];
+ 29         makeItZero(rt,numberOfQueen);
+ 30         <span class="comment">//first state that is random </span>
+ 31         rt=randomStateIntroducer( numberOfQueen, r, rt);
+ 32         <span class="keyword-directive">int</span> firstStateHurestic=HuresticCaculator(rt);
+ 33         <span class="ST1">fourRandState</span>[<span class="number">0</span>]=rt;
+ 34         <span class="ST1">neighbersHu</span>[<span class="number">0</span>]=firstStateHurestic;
+ 35         
+ 36         makeItZero(rt,numberOfQueen);
+ 37          rt=randomStateIntroducer( numberOfQueen, r, rt);
+ 38         firstStateHurestic=HuresticCaculator(rt);
+ 39         <span class="ST1">fourRandState</span>[<span class="number">1</span>]=rt;
+ 40         <span class="ST1">neighbersHu</span>[<span class="number">1</span>]=firstStateHurestic;
+ 41         
+ 42         makeItZero(rt,numberOfQueen);
+ 43         rt=randomStateIntroducer( numberOfQueen, r, rt);
+ 44         firstStateHurestic=HuresticCaculator(rt);
+ 45         <span class="ST1">fourRandState</span>[<span class="number">2</span>]=rt;
+ 46         <span class="ST1">neighbersHu</span>[<span class="number">2</span>]=firstStateHurestic;makeItZero(rt,numberOfQueen);
+ 47         
+ 48         makeItZero(rt,numberOfQueen);
+ 49         rt=randomStateIntroducer( numberOfQueen, r, rt);
+ 50         firstStateHurestic=HuresticCaculator(rt);
+ 51         <span class="ST1">fourRandState</span>[<span class="number">3</span>]=rt;
+ 52         <span class="ST1">neighbersHu</span>[<span class="number">3</span>]=firstStateHurestic;
+ 53        
+ 54         <span class="comment">///Printing first 4 random state = first population//</span>
+ 55         System.<span class="ST3">out</span>.println(<span class="character">&quot;</span><span class="character">4 first population is:</span><span class="character">&quot;</span>);
+ 56         <span class="keyword-directive">for</span> (<span class="keyword-directive">int</span> i = <span class="number">0</span>; i &lt; <span class="number">4</span>; i++) {
+ 57             statePrinter(<span class="ST1">fourRandState</span>[i]);
+ 58             System.<span class="ST3">out</span>.println(<span class="character">&quot;</span><span class="character">and the hurestic is:</span><span class="character">&quot;</span>+<span class="ST1">neighbersHu</span>[i]);
+ 59        }
+ 60         
+ 61         <span class="keyword-directive">while</span>(goalIsFound(<span class="ST1">fourRandState</span>,<span class="ST1">neighbersHu</span>)==<span class="keyword-directive">false</span>){
+ 62         GA(<span class="ST1">fourRandState</span>,<span class="ST1">neighbersHu</span>);
+ 63         }
+ 64 
+ 65    }
+ 66     <span class="keyword-directive">private</span> <span class="keyword-directive">void</span> <span class="ST2">makeItZero</span>(<span class="keyword-directive">int</span>[][] rt,<span class="keyword-directive">int</span> numberOfQueen) {
+ 67         <span class="keyword-directive">for</span> (<span class="keyword-directive">int</span> i = <span class="number">0</span>; i &lt; numberOfQueen; i++) {
+ 68             <span class="keyword-directive">for</span> (<span class="keyword-directive">int</span> j = <span class="number">0</span>; j &lt; numberOfQueen; j++) {
+ 69                 rt[i][j]=<span class="number">0</span>;
+ 70             }
+ 71         }
+ 72         
+ 73     }
+ 74 
+ 75 
+ 76     <span class="keyword-directive">private</span> <span class="keyword-directive">int</span>[][] <span class="ST2">randomStateIntroducer</span>( <span class="keyword-directive">int</span> numberOfQueen, Random r, <span class="keyword-directive">int</span>[][] rt) {
+ 77         makeItZero(rt, numberOfQueen);
+ 78         <span class="keyword-directive">int</span> n=<span class="number">0</span>;
+ 79         <span class="keyword-directive">while</span>(n&lt;numberOfQueen){
+ 80             <span class="keyword-directive">int</span> x=<span class="ST4">abs</span>(r.nextInt()%numberOfQueen);
+ 81             <span class="keyword-directive">int</span> y=<span class="ST4">abs</span>(r.nextInt()%numberOfQueen);
+ 82             
+ 83             <span class="keyword-directive">if</span>(rt[x][y]==<span class="number">0</span>){
+ 84                 rt[x][y]=<span class="number">1</span>;
+ 85                 n++;
+ 86             }
+ 87         }
+ 88         <span class="keyword-directive">return</span> rt;
+ 89     }
+ 90 
+ 91     <span class="comment">/////////a method for printing matrixes</span>
+ 92     <span class="keyword-directive">private</span> <span class="keyword-directive">void</span> <span class="ST2">statePrinter</span>(<span class="keyword-directive">int</span>[][] rt) {
+ 93         <span class="keyword-directive">for</span> (<span class="keyword-directive">int</span>[] bs : rt) {
+ 94             <span class="keyword-directive">for</span> (<span class="keyword-directive">int</span> b : bs) {
+ 95                 System.<span class="ST3">out</span>.print(b+<span class="character">&quot;</span><span class="keyword-directive">\t</span><span class="character">&quot;</span>);
+ 96             }
+ 97             System.<span class="ST3">out</span>.println(<span class="character">&quot;&quot;</span>);
+ 98         }
+ 99     }
+100        
+101 
+102    
+103 
+104    <span class="comment">//////a method for calculating hurestics //////////////</span>
+105     <span class="keyword-directive">private</span> <span class="keyword-directive">int</span> <span class="ST2">HuresticCaculator</span>(<span class="keyword-directive">int</span>[][] rt) {
+106         <span class="keyword-directive">int</span> h=<span class="number">0</span>;
+107          <span class="comment">//////checking index Out out of bound//////</span>
+108         <span class="keyword-directive">int</span> p1=<span class="number">0</span>;
+109         <span class="keyword-directive">int</span> m1=<span class="number">0</span>;
+110         <span class="keyword-directive">int</span> p2=<span class="number">0</span>;
+111         <span class="keyword-directive">int</span> m2=<span class="number">0</span>;
+112         <span class="comment">///////hurestic calculate</span>
+113         <span class="keyword-directive">for</span>(<span class="keyword-directive">int</span> i=<span class="number">0</span>;i&lt;rt.<span class="ST1">length</span>;i++){
+114             <span class="keyword-directive">for</span> (<span class="keyword-directive">int</span> j = <span class="number">0</span>; j &lt; rt.<span class="ST1">length</span>; j++) {
+115                 <span class="comment">////////////////////</span>
+116                 <span class="keyword-directive">if</span>((i+<span class="number">1</span>)&gt;=rt.<span class="ST1">length</span>){
+117                     p1=<span class="number">1</span>;
+118                 }
+119                 <span class="keyword-directive">if</span>((i-<span class="number">1</span>)&lt;<span class="number">0</span>){
+120                     m1=<span class="number">1</span>;
+121                 }
+122                 <span class="keyword-directive">if</span>((j+<span class="number">1</span>)&gt;=rt.<span class="ST1">length</span>){
+123                     p2=<span class="number">1</span>;
+124                 }
+125                 <span class="keyword-directive">if</span>((i-<span class="number">1</span>)&lt;<span class="number">0</span>){
+126                     m2=<span class="number">1</span>;
+127                 }
+128                 <span class="comment">////////////////////</span>
+129                 <span class="keyword-directive">if</span>(rt[i][j]==<span class="number">1</span>){
+130                 <span class="keyword-directive">if</span>(p2==<span class="number">0</span>){
+131                 <span class="keyword-directive">if</span>(rt[i][j+<span class="number">1</span>]==<span class="number">1</span>){
+132                   h--;  
+133                 }<span class="keyword-directive">else</span>{
+134                     h++;
+135                 }
+136                 }
+137                 <span class="keyword-directive">if</span>(m1==<span class="number">0</span>&amp;&amp;m2==<span class="number">0</span>){
+138                 <span class="keyword-directive">if</span>(rt[i-<span class="number">1</span>][j-<span class="number">1</span>]==<span class="number">1</span>){
+139                  h--;  
+140                 }<span class="keyword-directive">else</span>{
+141                     h++;
+142                 }
+143                 }
+144                 <span class="keyword-directive">if</span>(m1==<span class="number">0</span>){
+145                 <span class="keyword-directive">if</span>(rt[i-<span class="number">1</span>][j]==<span class="number">1</span>){
+146                  h--;  
+147                 }<span class="keyword-directive">else</span>{
+148                     h++;
+149                 }
+150                 }
+151                 <span class="keyword-directive">if</span>(m1==<span class="number">0</span>&amp;&amp;p2==<span class="number">0</span>){
+152                 <span class="keyword-directive">if</span>(rt[i-<span class="number">1</span>][j+<span class="number">1</span>]==<span class="number">1</span>){
+153                   h--;  
+154                 }<span class="keyword-directive">else</span>{
+155                     h++;
+156                 }
+157                 }
+158                 <span class="keyword-directive">if</span>(m2==<span class="number">0</span>){
+159                 <span class="keyword-directive">if</span>(rt[i][j-<span class="number">1</span>]==<span class="number">1</span>){
+160                   h--;  
+161                 }<span class="keyword-directive">else</span>{
+162                     h++;
+163                 }
+164                 }
+165                 <span class="keyword-directive">if</span>(p2==<span class="number">0</span>){
+166                 <span class="keyword-directive">if</span>(rt[i][j+<span class="number">1</span>]==<span class="number">1</span>){
+167                   h--;  
+168                 }<span class="keyword-directive">else</span>{
+169                     h++;
+170                 }
+171                 }
+172                 <span class="keyword-directive">if</span>(p1==<span class="number">0</span>&amp;&amp;m2==<span class="number">0</span>){
+173                 <span class="keyword-directive">if</span>(rt[i+<span class="number">1</span>][j-<span class="number">1</span>]==<span class="number">1</span>){
+174                   h--;  
+175                 }<span class="keyword-directive">else</span>{
+176                     h++;
+177                 }
+178                 }
+179                 <span class="keyword-directive">if</span>(p1==<span class="number">0</span>){
+180                 <span class="keyword-directive">if</span>(rt[i+<span class="number">1</span>][j] == <span class="number">1</span>){
+181                   h--;  
+182                 }<span class="keyword-directive">else</span>{
+183                     h++;
+184                 }
+185                 }
+186             }
+187         }
+188                
+189             
+190         }
+191    <span class="keyword-directive">return</span> h;
+192 
+193     }
+194    
+195 
+196      <span class="keyword-directive">private</span> <span class="keyword-directive">boolean</span> <span class="ST2">goalIsFound</span>(<span class="keyword-directive">int</span>[][][] randStates, <span class="keyword-directive">int</span>[] rSHurestics) {
+197      <span class="keyword-directive">boolean</span> ret=<span class="keyword-directive">false</span>;
+198      <span class="keyword-directive">int</span> goalStateHurestic=<span class="number">0</span>;
+199      NQueenProblem k= <span class="keyword-directive">new</span> NQueenProblem(randStates.<span class="ST1">length</span>);
+200         k.solveNQ();
+201      goalStateHurestic=HuresticCaculator(k.<span class="ST1">board</span>);
+202         <span class="keyword-directive">for</span> (<span class="keyword-directive">int</span> i = <span class="number">0</span>; i &lt; randStates.<span class="ST1">length</span>; i++) {
+203             <span class="keyword-directive">if</span>(rSHurestics[i]==goalStateHurestic){
+204                 ret=<span class="keyword-directive">true</span>;
+205                 System.<span class="ST3">out</span>.println(<span class="character">&quot;</span><span class="character">goal is found:</span><span class="character">&quot;</span>);
+206                 statePrinter(k.<span class="ST1">board</span>);
+207                 System.<span class="ST3">out</span>.println(<span class="character">&quot;</span><span class="character">and the goal state huresticis:</span><span class="character">&quot;</span>+goalStateHurestic);
+208                 <span class="keyword-directive">break</span>;
+209             }<span class="keyword-directive">else</span>{
+210                 ret=<span class="keyword-directive">false</span>;
+211                 System.<span class="ST3">out</span>.println(<span class="character">&quot;</span><span class="character">goal yet not found !! genetic is running !</span><span class="character">&quot;</span>);
+212             }
+213         }
+214      <span class="keyword-directive">return</span> ret;
+215             
+216     }
+217 
+218     <span class="keyword-directive">private</span> <span class="keyword-directive">void</span> <span class="ST2">GA</span>(<span class="keyword-directive">int</span>[][][] fourRandState, <span class="keyword-directive">int</span>[] neighbersHu) {
+219         <span class="keyword-directive">int</span>[][] temp=<span class="keyword-directive">new</span> <span class="keyword-directive">int</span>[fourRandState.<span class="ST1">length</span>][fourRandState.<span class="ST1">length</span>];
+220         
+221             <span class="keyword-directive">for</span> (<span class="keyword-directive">int</span> j = <span class="number">0</span>; j &lt; fourRandState.<span class="ST1">length</span>/<span class="number">2</span>; j++) {
+222                 <span class="keyword-directive">for</span> (<span class="keyword-directive">int</span> k = <span class="number">0</span>; k &lt; fourRandState.<span class="ST1">length</span>/<span class="number">2</span>; k++) {
+223                     temp[j][k]=fourRandState[<span class="number">0</span>][j][k];
+224                     fourRandState[<span class="number">0</span>][j][k]=fourRandState[<span class="number">1</span>][j][k];
+225                     fourRandState[<span class="number">1</span>][j][k]=temp[j][k];
+226                 }
+227             }
+228             
+229             <span class="keyword-directive">for</span> (<span class="keyword-directive">int</span> j = <span class="number">0</span>; j &lt; fourRandState.<span class="ST1">length</span>/<span class="number">2</span>; j++) {
+230                 <span class="keyword-directive">for</span> (<span class="keyword-directive">int</span> k = <span class="number">0</span>; k &lt; fourRandState.<span class="ST1">length</span>/<span class="number">2</span>; k++) {
+231                     temp[j][k]=fourRandState[<span class="number">2</span>][j][k];
+232                     fourRandState[<span class="number">2</span>][j][k]=fourRandState[<span class="number">3</span>][j][k];
+233                     fourRandState[<span class="number">3</span>][j][k]=temp[j][k];
+234                 }
+235             }
+236             
+237             Random r=<span class="keyword-directive">new</span> Random();
+238           <span class="keyword-directive">int</span> r1,r2,r3,r4;
+239           r1=Math.<span class="ST4">abs</span>(r.nextInt()%fourRandState.<span class="ST1">length</span>);
+240           r2=Math.<span class="ST4">abs</span>(r.nextInt()%fourRandState.<span class="ST1">length</span>);
+241           r3=Math.<span class="ST4">abs</span>(r.nextInt()%fourRandState.<span class="ST1">length</span>);
+242           r4=Math.<span class="ST4">abs</span>(r.nextInt()%fourRandState.<span class="ST1">length</span>);
+243           
+244           <span class="keyword-directive">if</span>(fourRandState[<span class="number">0</span>][r2][r1]==<span class="number">0</span>){
+245              fourRandState[<span class="number">0</span>][r2][r1]=<span class="number">1</span>; 
+246           }<span class="keyword-directive">else</span>{
+247               fourRandState[<span class="number">0</span>][r2][r1]=<span class="number">0</span>;
+248           }
+249            <span class="keyword-directive">if</span>(fourRandState[<span class="number">1</span>][r3][r4]==<span class="number">0</span>){
+250              fourRandState[<span class="number">1</span>][r3][r4]=<span class="number">1</span>; 
+251           }<span class="keyword-directive">else</span>{
+252               fourRandState[<span class="number">1</span>][r3][r4]=<span class="number">0</span>;
+253           }
+254           
+255             <span class="keyword-directive">if</span>(fourRandState[<span class="number">2</span>][r2][r4]==<span class="number">0</span>){
+256              fourRandState[<span class="number">2</span>][r2][r4]=<span class="number">1</span>; 
+257           }<span class="keyword-directive">else</span>{
+258               fourRandState[<span class="number">2</span>][r2][r4]=<span class="number">0</span>;
+259           }
+260           
+261              <span class="keyword-directive">if</span>(fourRandState[<span class="number">3</span>][r1][r4]==<span class="number">0</span>){
+262              fourRandState[<span class="number">3</span>][r1][r4]=<span class="number">1</span>; 
+263           }<span class="keyword-directive">else</span>{
+264               fourRandState[<span class="number">3</span>][r1][r4]=<span class="number">0</span>;
+265           }
+266           
+267         neighbersHu[<span class="number">0</span>]=HuresticCaculator(fourRandState[<span class="number">0</span>]);
+268         neighbersHu[<span class="number">1</span>]=HuresticCaculator(fourRandState[<span class="number">1</span>]);
+269         neighbersHu[<span class="number">2</span>]=HuresticCaculator(fourRandState[<span class="number">2</span>]); 
+270         neighbersHu[<span class="number">3</span>]=HuresticCaculator(fourRandState[<span class="number">3</span>]);
+271         
+272     }
+273     
+274      <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">void</span> <span class="ST5">main</span>(String[] args) {
+275         gaNqueen h=<span class="keyword-directive">new</span> gaNqueen();
+276        Scanner s=<span class="keyword-directive">new</span> Scanner(System.<span class="ST3">in</span>);
+277        System.<span class="ST3">out</span>.println(<span class="character">&quot;</span><span class="character">please enter number of queens !</span><span class="character">&quot;</span>);
+278        h.nqueen(s.nextInt());
+279     } 
+280 }
+281 
+282 
+</pre></body>
+</html>
